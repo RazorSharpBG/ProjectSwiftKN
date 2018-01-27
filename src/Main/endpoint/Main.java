@@ -18,8 +18,10 @@ public class Main {
             System.out.println("\n---------Menu---------");
             System.out.println("---------Press 1 for all user information---------");
             System.out.println("---------Press 2 to create user---------");
-            System.out.println("---------Press 3 to create user---------");
+            System.out.println("---------Press 3 to find user---------");
             System.out.println("---------Press 4 to create movie---------");
+            System.out.println("---------Press 5 to find movie---------");
+            System.out.println("---------Press 6 to list movie---------");
 
             System.out.println("---------Press 0 to exit---------");
 
@@ -40,6 +42,12 @@ public class Main {
                 return;
             }else if(counter == 4){
                 movieService.createMovie();
+            }
+            else if(counter == 5){
+                movieService.findMovie();
+            }
+            else if(counter == 6){
+                movieService.listMovies();
             }
         }
     }

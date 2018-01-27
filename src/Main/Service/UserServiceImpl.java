@@ -1,6 +1,7 @@
 package Main.Service;
 
 
+import javax.management.StringValueExp;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,14 +18,13 @@ public class UserServiceImpl implements UserService {
     public void findUser() {
         System.out.println("Enter gsm & email:");
         Scanner scanner = new Scanner(System.in);
-        String sqlStatement = "SELECT * FROM person " +
-                "WHERE gsm = " + scanner.next() + " OR email = " + scanner.next();
+        String sqlStatement = String.format(" SELECT * FROM person WHERE gsm = '%s' OR email =  '%s'",scanner.next(),scanner.next());
         try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
             Statement statement = con.createStatement()){
             ResultSet rs = statement.executeQuery(sqlStatement);
 
             while (rs.next()){
-                System.out.printf("%s %s %s %s %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("adress"),rs.getInt("tax"));
+                System.out.printf("%s %s %s %s %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("address"),rs.getInt("tax"));
             }
 
         }catch (SQLException ex ){
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser() {
         Scanner scanner = new Scanner(System.in);
-        String sqlStatement = "INSERT INTO person(name,gsm,email,adress,tax) " +
+        String sqlStatement = "INSERT INTO person(name,gsm,email,address,tax) " +
                 "values (?,?,?,?,?);";
         try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
             PreparedStatement statement = con.prepareStatement(sqlStatement)){
@@ -66,7 +66,8 @@ public class UserServiceImpl implements UserService {
 
 
             while (rs.next()){
-                System.out.printf("%s %s %s %s %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("adress"),rs.getInt("tax"));
+                System.out.printf("%s %s %s %s %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("address"),rs.getInt("tax"));
+                System.out.println();
             }
 
         }catch (SQLException ex ){
