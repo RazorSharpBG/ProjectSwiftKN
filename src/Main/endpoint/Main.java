@@ -22,6 +22,7 @@ public class Main {
             System.out.println("---------Press 4 to create movie---------");
             System.out.println("---------Press 5 to find movie---------");
             System.out.println("---------Press 6 to list movie---------");
+            System.out.println("---------Press 7 to loan movie---------");
 
             System.out.println("---------Press 0 to exit---------");
 
@@ -33,13 +34,6 @@ public class Main {
                 userService.createUser();
             }else if(counter == 3){
                 userService.findUser();
-            }else if(counter == 0){
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                Date date = new Date();
-                Date date2 = new Date();
-                if(date.compareTo(date2) == -1)
-                System.out.println(dateFormat.format(date));
-                return;
             }else if(counter == 4){
                 movieService.createMovie();
             }
@@ -48,6 +42,17 @@ public class Main {
             }
             else if(counter == 6){
                 movieService.listMovies();
+            }
+            else if(counter==7) {
+                userService.loanMovie();
+            }
+            else if(counter == 0){
+//                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+//                Date date = new Date();
+//                Date date2 = new Date();
+//                if(date.compareTo(date2) == -1)
+//                    System.out.println(dateFormat.format(date));
+                return;
             }
         }
     }

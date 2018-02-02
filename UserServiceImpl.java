@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     	String name=scanner.next();
     	System.out.println("Enter movie you want to get:");
     	String title=scanner.next();
-    	String sqlStatement="SELECT id from person WHERE name = ?";
+    	String sqlStatement="SELECT id from person WHERE name = '?'";
     	String sqlStatement1="SELECT id from movies WHERE title = '?'";
     	String sqlStatement2="insert into person_movies(id_person,id_movies)" + " values (?,?);";
     	try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD)){
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 //        System.out.println("Enter gsm & email:");
 //        Scanner scanner = new Scanner(System.in);
 //        String sqlStatement = String.format(" SELECT * FROM person WHERE gsm = '%s' OR email =  '%s'",scanner.next(),scanner.next());
-//        try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
+//        try(Connect con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
 //            Statement statement = con.createStatement()){
 //            ResultSet rs = statement.executeQuery(sqlStatement);
 //

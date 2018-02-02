@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
 public class Main {
     private static final String DBNS_CONN_STRING = "jdbc:mysql://localhost:3306/project";
     private static final String DBNS_USERNAME = "root";
-    private static final String DBNS_PASSWORD = "balon4e1";
+    private static final String DBNS_PASSWORD = "mainata970430";
 
 	
 	public static void main(String[] args) {

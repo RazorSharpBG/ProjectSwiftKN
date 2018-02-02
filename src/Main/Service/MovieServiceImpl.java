@@ -60,7 +60,7 @@ public class MovieServiceImpl implements MovieService {
 
 
             while (rs.next()){
-                System.out.printf("%s %f %d %d",rs.getString("Title"),rs.getDouble("Loan"),rs.getInt("Available"),rs.getInt("Available_days"));
+                System.out.printf("%s %.2f %d %d",rs.getString("Title"),rs.getDouble("Loan"),rs.getInt("Available"),rs.getInt("Available_days"));
                 System.out.println();
             }
 
