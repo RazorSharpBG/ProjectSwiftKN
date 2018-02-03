@@ -1,19 +1,21 @@
 package Main.Service;
 
+import Main.connection.Connect;
+
 import java.sql.*;
 import java.util.Scanner;
 
-public class MovieServiceImpl implements MovieService {
-    private static final String DBNS_CONN_STRING = "jdbc:mysql://localhost:3306/project";
-    private static final String DBNS_USERNAME = "root";
-    private static final String DBNS_PASSWORD = "mainata970430";
+public class MovieServiceImpl extends Connect implements MovieService {
+//    private static final String DBNS_CONN_STRING = "jdbc:mysql://localhost:3306/project";
+//    private static final String DBNS_USERNAME = "root";
+//    private static final String DBNS_PASSWORD = "mainata970430";
 
     @Override
     public void findMovie() {
         System.out.println("Enter title: ");
         Scanner scanner = new Scanner(System.in);
-        String sqlStatement = String.format(" SELECT * FROM movies WHERE Title =  '%s'",scanner.next());
-        try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
+        String sqlStatement = String.format(" SELECT * FROM movies WHERE Title =  '%s'",scanner.nextLine());
+        try(Connection con = getConnection();
             Statement statement = con.createStatement()){
             ResultSet rs = statement.executeQuery(sqlStatement);
 
@@ -21,13 +23,13 @@ public class MovieServiceImpl implements MovieService {
                 System.out.printf("%s %.2f %d %d",rs.getString("Title"),rs.getDouble("Loan"),rs.getInt("Available"),rs.getInt("Available_days"));
             }
 
-        }catch (SQLException ex ){
-            while (ex!=null){
-                System.out.println(ex.getSQLState());
-                System.out.println(ex.getMessage());
-                System.out.println(ex.getErrorCode());
-                ex = ex.getNextException();
-            }
+        }catch (SQLException |  ClassNotFoundException ex ){
+//            while (ex!=null){
+//                System.out.println(ex.getSQLState());
+//                System.out.println(ex.getMessage());
+//                System.out.println(ex.getErrorCode());
+//                ex = ex.getNextException();
+//            }
         }
     }
 
@@ -36,16 +38,20 @@ public class MovieServiceImpl implements MovieService {
         Scanner scanner = new Scanner(System.in);
         String sqlStatement = "INSERT INTO movies (Title,Loan,Available, Available_days) " +
                 "values (?,?,?,?);";
-        try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
+        try(Connection con = getConnection();
             PreparedStatement statement = con.prepareStatement(sqlStatement)){
-            statement.setString(1,scanner.next());
+            System.out.print("Enter title: ");
+            statement.setString(1,scanner.nextLine());
+            System.out.print("Enter oan price:");
             statement.setDouble(2,scanner.nextDouble());
+            System.out.print("Enter available units: ");
             statement.setInt(3,scanner.nextInt());
+            System.out.print("Enter available days: ");
             statement.setInt(4,scanner.nextInt());
 
             int rs = statement.executeUpdate();
 
-        } catch (SQLException e) {
+        } catch (SQLException |  ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -54,7 +60,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void listMovies() {
         String sqlStatement = "SELECT * FROM movies";
-        try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
+        try(Connection con =getConnection();
             Statement statement = con.createStatement()){
             ResultSet rs = statement.executeQuery(sqlStatement);
 
@@ -64,13 +70,13 @@ public class MovieServiceImpl implements MovieService {
                 System.out.println();
             }
 
-        }catch (SQLException ex ){
-            while (ex!=null){
-                System.out.println(ex.getSQLState());
-                System.out.println(ex.getMessage());
-                System.out.println(ex.getErrorCode());
-                ex = ex.getNextException();
-            }
+        }catch (SQLException |  ClassNotFoundException ex ){
+//            while (ex!=null){
+//                System.out.println(ex.getSQLState());
+//                System.out.println(ex.getMessage());
+//                System.out.println(ex.getErrorCode());
+//                ex = ex.getNextException();
+//            }
         }
 
     }

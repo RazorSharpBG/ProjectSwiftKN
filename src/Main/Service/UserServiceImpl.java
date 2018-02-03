@@ -13,18 +13,19 @@ import java.util.Scanner;
 
 
 public class UserServiceImpl extends Connect implements UserService  {
-    private static final String DBNS_CONN_STRING = "jdbc:mysql://localhost:3306/project";
-    private static final String DBNS_USERNAME = "root";
-    private static final String DBNS_PASSWORD = "mainata970430";
+//    private static final String DBNS_CONN_STRING = "jdbc:mysql://localhost:3306/project";
+//    private static final String DBNS_USERNAME = "root";
+//    private static final String DBNS_PASSWORD = "mainata970430";
 
 
 
+        private static int  availableDays;
     @Override
     public void findUser() {
         System.out.println("Enter gsm & email:");
         Scanner scanner = new Scanner(System.in);
         String sqlStatement = String.format(" SELECT * FROM person WHERE gsm = '%s' OR email =  '%s'",scanner.next(),scanner.next());
-        try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
+        try(Connection con = getConnection();
             Statement statement = con.createStatement()){
             ResultSet rs = statement.executeQuery(sqlStatement);
 
@@ -32,13 +33,13 @@ public class UserServiceImpl extends Connect implements UserService  {
                 System.out.printf("%s %s %s %s %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("address"),rs.getInt("tax"));
             }
 
-        }catch (SQLException ex ){
-            while (ex!=null){
-                System.out.println(ex.getSQLState());
-                System.out.println(ex.getMessage());
-                System.out.println(ex.getErrorCode());
-                ex = ex.getNextException();
-            }
+        }catch (SQLException |  ClassNotFoundException ex ){
+//            while (ex!=null){
+//                System.out.println(ex.getSQLState());
+//                System.out.println(ex.getMessage());
+//                System.out.println(ex.getErrorCode());
+//                ex = ex.getNextException();
+//            }
 
 
         }
@@ -47,27 +48,30 @@ public class UserServiceImpl extends Connect implements UserService  {
     @Override
     public void createUser() {
         Scanner scanner = new Scanner(System.in);
-        String sqlStatement = "INSERT INTO person(name,gsm,email,address,tax) " +
-                "values (?,?,?,?,?);";
-        try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
+        String sqlStatement = "INSERT INTO person(name,gsm,email,address) " +
+                "values (?,?,?,?);";
+        try(Connection con = getConnection();
             PreparedStatement statement = con.prepareStatement(sqlStatement)){
-            statement.setString(1,scanner.next());
+            System.out.print("Enter name: ");
+            statement.setString(1,scanner.nextLine());
+            System.out.print("Enter GSM number: ");
             statement.setString(2,scanner.next());
+            System.out.print("Enter e-mail: ");
             statement.setString(3,scanner.next());
+            System.out.print("Enter address: ");
             statement.setString(4,scanner.next());
-            statement.setInt(5,scanner.nextInt());
+
 
             int rs = statement.executeUpdate();
 
-        } catch (SQLException  e) {
+        } catch (SQLException |  ClassNotFoundException  e) {
             e.printStackTrace();
         }
     }
-
     @Override
     public void listUsers() {
         String sqlStatement = "SELECT * FROM person";
-        try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD);
+        try(Connection con =getConnection();
             Statement statement = con.createStatement()){
             ResultSet rs = statement.executeQuery(sqlStatement);
 
@@ -77,64 +81,75 @@ public class UserServiceImpl extends Connect implements UserService  {
                 System.out.println();
             }
 
-        }catch (SQLException  ex ){
+        }catch (SQLException |  ClassNotFoundException ex ){
 //
             ex.printStackTrace();
         }
     }
-
+    @Override
     public void loanMovie() {
         Scanner scanner=new Scanner(System.in);
+        System.out.print("Enter your name: ");
+        String name=scanner.nextLine();
+        System.out.print("Enter title of movie you want to get: ");
+        String title=scanner.nextLine();
 
 
+        String sqlStatement="SELECT id FROM person WHERE name = ? ;";
+        String sqlStatement1="SELECT id FROM movies WHERE title = ? ;";
+        String sqlStatement2="INSERT INTO person_movies (id_person, id_movies,return_date) VALUES (?,?, NOW() + INTERVAL " + availableDays + " DAY);";
+        String sqlStatement3 ="SELECT Available_days FROM movies WHERE title = ? ;";
 
-        System.out.println("Enter your name:");
-        String name  = scanner.next();
-
-        System.out.println("Enter movie you want to get:");
-        String title = scanner.next();
-
-        String sqlStatement=String.format("SELECT id FROM person WHERE name = '%s'",name);
-        String sqlStatement1=String.format("SELECT id FROM movies WHERE title = '%s'",title);
-
-        String sqlStatement2="INSERT INTO person_movies(id_person,id_movies,get_date,return_date) VALUES (?,?,?,?);";
-
-        try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD)){
-
-            PreparedStatement statement = con.prepareStatement(sqlStatement);
-
-            ResultSet rs = statement.executeQuery(sqlStatement);
+        try(Connection con = getConnection()){
+            PreparedStatement statement =con.prepareStatement(sqlStatement);
+            statement.setString(1,name);
+            ResultSet rs = statement.executeQuery();
 
             int id_person = 0;
-            while (rs.next()) {
-                  id_person = rs.getInt("id");
+
+            if (rs.next()) {
+                id_person=rs.getInt("id");
             }
 
             PreparedStatement statement1=con.prepareStatement(sqlStatement1);
-
-            ResultSet rs1=statement1.executeQuery(sqlStatement1);
+            statement1.setString(1, title);
+            ResultSet rs1=statement1.executeQuery();
 
             int id_movies = 0;
-            while (rs1.next()) {
-                id_movies = rs1.getInt("id");
+
+            if (rs1.next()) {
+                id_movies=rs1.getInt("id");
             }
+
+            PreparedStatement statement3 = con.prepareStatement(sqlStatement3);
+            statement3.setString(1, title);
+            ResultSet rs3=statement3.executeQuery();
+
+                int days=0;
+            if (rs3.next()) {
+                days = rs3.getInt("Available_days");
+            }
+
+            availableDays = days;
 
             PreparedStatement statement2=con.prepareStatement(sqlStatement2);
             statement2.setInt(1,id_person);
             statement2.setInt(2,id_movies);
 
+            statement2.executeUpdate();
 
-            int rs2 = statement2.executeUpdate(sqlStatement2);
+//                while (rs2.next()){
+//                    System.out.printf("%d %d",rs2.getInt("id_person"),rs2.getInt("id_movies"));
+//                }
 
-
-        }
-        catch (SQLException  ex){
-            while (ex!=null){
-                System.out.println(ex.getSQLState());
-                System.out.println(ex.getMessage());
-                System.out.println(ex.getErrorCode());
-                ex = ex.getNextException();
-            }
+        }catch (SQLException |  ClassNotFoundException ex ){
+            ex.printStackTrace();
+//            while (ex!=null){
+//                System.out.println(ex.getSQLState());
+//                System.out.println(ex.getMessage());
+//                System.out.println(ex.getErrorCode());
+//                ex = ex.getNextException();
+//            }
         }
     }
 

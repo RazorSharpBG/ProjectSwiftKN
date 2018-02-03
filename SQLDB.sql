@@ -60,7 +60,7 @@ CREATE TABLE `person` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `gsm_UNIQUE` (`gsm`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +69,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES (1,'Kiril Tenchev','0898547621','abv@abv.bg','Sofiq,Mladost',0),(2,'Mladen','0898230065','kkkk@abv.bg','Sofiq',0),(3,'Petka','0897451244','abvabv@abv.bg','Plovdiv',0),(4,'Ivan','0898754121','wtf@abv.bg','Plovdiv',0),(5,'Nikola','0888546457','wow@abv.bg','Pernik',0);
+INSERT INTO `person` VALUES (1,'Kiril Tenchev','0898547621','abv@abv.bg','Sofiq,Mladost',0),(2,'Mladen','0898230065','kkkk@abv.bg','Sofiq',0),(3,'Petka','0897451244','abvabv@abv.bg','Plovdiv',0),(4,'Ivan','0898754121','wtf@abv.bg','Plovdiv',0),(5,'Nikola','0888546457','wow@abv.bg','Pernik',0),(6,'Nikolai','0888775544','wht@abv.bg','Petrich',0),(7,'Ivan Doinenski','0897542144','ivan@abv.bg','Plovdiv',0),(8,'Petar Ivanov','0897554466','pesho@gmail.com','Ruse',0);
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,7 +84,7 @@ CREATE TABLE `person_movies` (
   `id_pm` int(11) NOT NULL AUTO_INCREMENT,
   `id_person` int(11) NOT NULL,
   `id_movies` int(11) NOT NULL,
-  `get_date` date DEFAULT NULL,
+  `get_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `return_date` date DEFAULT NULL,
   PRIMARY KEY (`id_pm`),
   UNIQUE KEY `id_pm_UNIQUE` (`id_pm`),
@@ -92,7 +92,7 @@ CREATE TABLE `person_movies` (
   KEY `id_person_idx` (`id_person`),
   CONSTRAINT `id_movies` FOREIGN KEY (`id_movies`) REFERENCES `movies` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `id_person` FOREIGN KEY (`id_person`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,6 +101,7 @@ CREATE TABLE `person_movies` (
 
 LOCK TABLES `person_movies` WRITE;
 /*!40000 ALTER TABLE `person_movies` DISABLE KEYS */;
+INSERT INTO `person_movies` VALUES (1,4,1,'2018-02-03 10:59:09',NULL),(2,4,1,'2018-02-03 15:31:08','2018-02-03'),(3,1,3,'2018-02-03 15:33:49','2018-02-03'),(4,1,2,'2018-02-03 15:36:01','2018-02-03'),(5,4,2,'2018-02-03 15:37:36','2018-02-03'),(6,4,3,'2018-02-03 15:44:29','2018-02-03'),(7,4,4,'2018-02-03 15:46:02','2018-02-03'),(8,4,1,'2018-02-03 15:49:51','2018-02-03'),(9,4,1,'2018-02-03 15:50:02','2018-02-03');
 /*!40000 ALTER TABLE `person_movies` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,4 +118,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-02 16:06:09
+-- Dump completed on 2018-02-03 17:51:01

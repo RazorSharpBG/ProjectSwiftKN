@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     	String title=scanner.next();
     	String sqlStatement="SELECT id from person WHERE name = '?'";
     	String sqlStatement1="SELECT id from movies WHERE title = '?'";
-    	String sqlStatement2="insert into person_movies(id_person,id_movies)" + " values (?,?);";
+    	String sqlStatement2="insert into person_movies(id_person, id_movies) values (?,?);";
     	try(Connection con = DriverManager.getConnection(DBNS_CONN_STRING,DBNS_USERNAME,DBNS_PASSWORD)){
                 PreparedStatement statement =con.prepareStatement(sqlStatement);
     			statement.setString(1,name);

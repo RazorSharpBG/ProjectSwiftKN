@@ -23,7 +23,6 @@ public class Main {
             System.out.println("---------Press 5 to find movie---------");
             System.out.println("---------Press 6 to list movie---------");
             System.out.println("---------Press 7 to loan movie---------");
-
             System.out.println("---------Press 0 to exit---------");
 
 
