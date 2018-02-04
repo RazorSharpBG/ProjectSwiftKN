@@ -13,13 +13,8 @@ import java.util.Scanner;
 
 
 public class UserServiceImpl extends Connect implements UserService  {
-//    private static final String DBNS_CONN_STRING = "jdbc:mysql://localhost:3306/project";
-//    private static final String DBNS_USERNAME = "root";
-//    private static final String DBNS_PASSWORD = "mainata970430";
 
 
-
-        private static int  availableDays;
     @Override
     public void findUser() {
         System.out.println("Enter gsm & email:");
@@ -30,18 +25,11 @@ public class UserServiceImpl extends Connect implements UserService  {
             ResultSet rs = statement.executeQuery(sqlStatement);
 
             while (rs.next()){
-                System.out.printf("%s %s %s %s %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("address"),rs.getInt("tax"));
+                System.out.printf("%s %s %s %s %d %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("address"),rs.getInt("number_movies"),rs.getInt("tax"));
             }
 
         }catch (SQLException |  ClassNotFoundException ex ){
-//            while (ex!=null){
-//                System.out.println(ex.getSQLState());
-//                System.out.println(ex.getMessage());
-//                System.out.println(ex.getErrorCode());
-//                ex = ex.getNextException();
-//            }
-
-
+            ex.printStackTrace();
         }
     }
 
@@ -64,7 +52,7 @@ public class UserServiceImpl extends Connect implements UserService  {
 
             int rs = statement.executeUpdate();
 
-        } catch (SQLException |  ClassNotFoundException  e) {
+        }catch (SQLException |  ClassNotFoundException  e) {
             e.printStackTrace();
         }
     }
@@ -75,14 +63,12 @@ public class UserServiceImpl extends Connect implements UserService  {
             Statement statement = con.createStatement()){
             ResultSet rs = statement.executeQuery(sqlStatement);
 
-
             while (rs.next()){
-                System.out.printf("%s %s %s %s %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("address"),rs.getInt("tax"));
+                System.out.printf("%s %s %s %s %d %d",rs.getString("name"),rs.getString("gsm"),rs.getString("email"),rs.getString("address"),rs.getInt("number_movies"),rs.getInt("tax"));
                 System.out.println();
             }
 
         }catch (SQLException |  ClassNotFoundException ex ){
-//
             ex.printStackTrace();
         }
     }
@@ -97,8 +83,10 @@ public class UserServiceImpl extends Connect implements UserService  {
 
         String sqlStatement="SELECT id FROM person WHERE name = ? ;";
         String sqlStatement1="SELECT id FROM movies WHERE title = ? ;";
-        String sqlStatement2="INSERT INTO person_movies (id_person, id_movies,return_date) VALUES (?,?, NOW() + INTERVAL " + availableDays + " DAY);";
+        String sqlStatement2="INSERT INTO person_movies (id_person, id_movies,return_date) VALUES (?,?, NOW() + INTERVAL ? DAY);";
         String sqlStatement3 ="SELECT Available_days FROM movies WHERE title = ? ;";
+        String sqlStatement4 = "UPDATE movies SET Available=Available-1 Where Title = ? ;";
+        String sqlStatement5 = "UPDATE person SET number_movies=number_movies+1 Where name = ? ;";
 
         try(Connection con = getConnection()){
             PreparedStatement statement =con.prepareStatement(sqlStatement);
@@ -125,31 +113,30 @@ public class UserServiceImpl extends Connect implements UserService  {
             statement3.setString(1, title);
             ResultSet rs3=statement3.executeQuery();
 
-                int days=0;
+                int availableDays = 0;
             if (rs3.next()) {
-                days = rs3.getInt("Available_days");
+                availableDays = rs3.getInt("Available_days");
             }
-
-            availableDays = days;
 
             PreparedStatement statement2=con.prepareStatement(sqlStatement2);
             statement2.setInt(1,id_person);
             statement2.setInt(2,id_movies);
+            statement2.setInt(3,availableDays);
 
             statement2.executeUpdate();
 
-//                while (rs2.next()){
-//                    System.out.printf("%d %d",rs2.getInt("id_person"),rs2.getInt("id_movies"));
-//                }
+            PreparedStatement statement4=con.prepareStatement(sqlStatement4);
+            statement4.setString(1, title);
+            statement4.executeUpdate();
+
+            PreparedStatement statement5=con.prepareStatement(sqlStatement5);
+            statement5.setString(1,name);
+            statement5.executeUpdate();
+
 
         }catch (SQLException |  ClassNotFoundException ex ){
             ex.printStackTrace();
-//            while (ex!=null){
-//                System.out.println(ex.getSQLState());
-//                System.out.println(ex.getMessage());
-//                System.out.println(ex.getErrorCode());
-//                ex = ex.getNextException();
-//            }
+
         }
     }
 
