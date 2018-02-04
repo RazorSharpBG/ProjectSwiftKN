@@ -16,24 +16,28 @@ public class Main {
 
         while(counter != -1){
             System.out.println("\n---------Menu---------");
-            System.out.println("---------Press 1 for all user information---------");
+            System.out.println("---------Press 1 to list users---------");
             System.out.println("---------Press 2 to create user---------");
             System.out.println("---------Press 3 to find user---------");
-            System.out.println("---------Press 4 to create movie---------");
+            System.out.println("---------Press 4 to add movie---------");
             System.out.println("---------Press 5 to find movie---------");
             System.out.println("---------Press 6 to list movie---------");
             System.out.println("---------Press 7 to loan movie---------");
+            System.out.println("---------Press 8 to return movie---------");
             System.out.println("---------Press 0 to exit---------");
 
 
             counter = scanner.nextInt();
             if(counter == 1){
                 userService.listUsers();
-            }else if(counter == 2){
+            }
+            else if(counter == 2){
                 userService.createUser();
-            }else if(counter == 3){
+            }
+            else if(counter == 3){
                 userService.findUser();
-            }else if(counter == 4){
+            }
+            else if(counter == 4){
                 movieService.createMovie();
             }
             else if(counter == 5){
@@ -45,12 +49,10 @@ public class Main {
             else if(counter==7) {
                 userService.loanMovie();
             }
+            else if(counter==8) {
+                movieService.returnMovie();
+            }
             else if(counter == 0){
-//                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-//                Date date = new Date();
-//                Date date2 = new Date();
-//                if(date.compareTo(date2) == -1)
-//                    System.out.println(dateFormat.format(date));
                 return;
             }
         }

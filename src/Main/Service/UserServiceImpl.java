@@ -47,7 +47,7 @@ public class UserServiceImpl extends Connect implements UserService  {
             System.out.print("Enter e-mail: ");
             statement.setString(3,scanner.next());
             System.out.print("Enter address: ");
-            statement.setString(4,scanner.next());
+            statement.setString(4,scanner.nextLine());
 
 
             int rs = statement.executeUpdate();

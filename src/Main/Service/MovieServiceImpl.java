@@ -6,9 +6,6 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class MovieServiceImpl extends Connect implements MovieService {
-//    private static final String DBNS_CONN_STRING = "jdbc:mysql://localhost:3306/project";
-//    private static final String DBNS_USERNAME = "root";
-//    private static final String DBNS_PASSWORD = "mainata970430";
 
     @Override
     public void findMovie() {
@@ -24,12 +21,7 @@ public class MovieServiceImpl extends Connect implements MovieService {
             }
 
         }catch (SQLException |  ClassNotFoundException ex ){
-//            while (ex!=null){
-//                System.out.println(ex.getSQLState());
-//                System.out.println(ex.getMessage());
-//                System.out.println(ex.getErrorCode());
-//                ex = ex.getNextException();
-//            }
+            ex.printStackTrace();
         }
     }
 
@@ -71,13 +63,65 @@ public class MovieServiceImpl extends Connect implements MovieService {
             }
 
         }catch (SQLException |  ClassNotFoundException ex ){
-//            while (ex!=null){
-//                System.out.println(ex.getSQLState());
-//                System.out.println(ex.getMessage());
-//                System.out.println(ex.getErrorCode());
-//                ex = ex.getNextException();
-//            }
+            ex.printStackTrace();
         }
 
+    }
+    @Override
+    public void returnMovie() {
+        Scanner scanner=new Scanner(System.in);
+        System.out.print("Enter your name: ");
+        String name=scanner.nextLine();
+        System.out.print("Enter title of movie you want to return: ");
+        String title=scanner.nextLine();
+
+
+        String sqlStatement="SELECT id FROM person WHERE name = ? ;";
+        String sqlStatement1="SELECT id FROM movies WHERE title = ? ;";
+        String sqlStatement2="DELETE FROM person_movies WHERE id_person = ? AND id_movies = ? ;";
+        String sqlStatement4 = "UPDATE movies SET Available=Available+1 WHERE Title = ? ;";
+        String sqlStatement5 = "UPDATE person SET number_movies=number_movies-1 WHERE name = ? ;";
+
+        try(Connection con = getConnection()){
+            PreparedStatement statement =con.prepareStatement(sqlStatement);
+            statement.setString(1,name);
+            ResultSet rs = statement.executeQuery();
+
+            int id_person = 0;
+
+            if (rs.next()) {
+                id_person=rs.getInt("id");
+            }
+
+            PreparedStatement statement1=con.prepareStatement(sqlStatement1);
+            statement1.setString(1, title);
+            ResultSet rs1=statement1.executeQuery();
+
+            int id_movies = 0;
+
+            if (rs1.next()) {
+                id_movies=rs1.getInt("id");
+            }
+            
+
+            PreparedStatement statement2=con.prepareStatement(sqlStatement2);
+            statement2.setInt(1,id_person);
+            statement2.setInt(2,id_movies);
+
+            statement2.executeUpdate();
+
+            PreparedStatement statement4=con.prepareStatement(sqlStatement4);
+            statement4.setString(1, title);
+            statement4.executeUpdate();
+
+            PreparedStatement statement5=con.prepareStatement(sqlStatement5);
+            statement5.setString(1,name);
+            statement5.executeUpdate();
+
+
+        }catch (SQLException |  ClassNotFoundException ex ){
+            ex.printStackTrace();
+
+        }
     }
 }
